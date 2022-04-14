@@ -1,10 +1,10 @@
 let car1;
 let car2;
 
-let x = 0;
-
 function setup() {
-    createCanvas(9000, 400);
+    let myCanvas = createCanvas(9000, 400);
+    console.log('setup fire')
+    myCanvas.parent(myContainer)
     car1 = new Car(100, 150);
     car2 = new Car(100, 250);
 }
@@ -16,7 +16,6 @@ function draw() {
     car2.update();
     car1.show();
     car2.show();
-
 }
 
 // Create Prototype Object Car
@@ -31,6 +30,6 @@ function Car(x, y) {
     }
     this.update = () => {
         // update state here
-        this.x = this.x + 2
+
     }
 }
