@@ -1,9 +1,14 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const { Server } = require("socket.io");
+const { WebcastPushConnection } = require('tiktok-live-connector');
+
 const PORT = process.env.PORT || 6996;
 const BASE_DIR = path.join(__dirname, "../")
 
+
+// setup request handler
 let handleRequest = (req, res) => {
     let requestURL = req.url;
     if (requestURL === "/") {
@@ -36,5 +41,24 @@ let handleRequest = (req, res) => {
 }
 
 let server = http.createServer(handleRequest);
+const io = new Server(server);
 
+// Setup Tiktok connector
+let tiktokUsername = "noranmanalu";
+
+// Create a new wrapper object and pass the username
+let tiktokChatConnection = new WebcastPushConnection(tiktokUsername);
+
+// Setup Socket io
+tiktokChatConnection.connect().then(state => {
+    console.info(`Connected to roomId ${state.roomId}`);
+}).catch(err => {
+    console.error('Failed to connect', err);
+});
+
+io.on('connection', (socket) => {
+    tiktokChatConnection.on('chat', data => {
+        io.emit('chat', data)
+    });
+});
 server.listen(PORT, () => console.log('Listening on Port ' + PORT))
