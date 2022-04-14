@@ -16,7 +16,6 @@ let handleRequest = (req, res) => {
     }
 
     let extention = path.extname(requestURL);
-
     const mimeType = {
         '.html': 'text/html',
         '.css': 'text/css',
@@ -24,6 +23,7 @@ let handleRequest = (req, res) => {
         '.jpeg': 'image/jpeg',
         '.png': 'image/png',
         '.svg': 'image/svg+xml',
+        '.ico': 'image/icon',
     };
     let contentType = mimeType[extention] || 'text/plain';
 
@@ -31,7 +31,7 @@ let handleRequest = (req, res) => {
         (err, data) => {
             if (err) {
                 res.writeHead(500);
-                return res.end('Internal Server Error : ' + requestURL);
+                return res.end('Internal Server Error : ' + err);
             }
 
             res.writeHead(200, { 'Content-Type': contentType });
@@ -44,7 +44,7 @@ let server = http.createServer(handleRequest);
 const io = new Server(server);
 
 // Setup Tiktok connector
-let tiktokUsername = "noranmanalu";
+let tiktokUsername = "mrups9";
 
 // Create a new wrapper object and pass the username
 let tiktokChatConnection = new WebcastPushConnection(tiktokUsername);
@@ -58,7 +58,10 @@ tiktokChatConnection.connect().then(state => {
 
 io.on('connection', (socket) => {
     tiktokChatConnection.on('chat', data => {
-        io.emit('chat', data)
+        socket.emit('chat', data);
     });
+    tiktokChatConnection.on('gift', data => {
+        socket.emit('gift', data);
+    })
 });
 server.listen(PORT, () => console.log('Listening on Port ' + PORT))

@@ -7,33 +7,22 @@ let car2;
 let count = 0;
 let count2 = 0;
 
-class Car {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y
-    }
-    show = () => {
-        rect(this.x, this.y, 80, 40);
-    }
-
-    update = () => {
-        // Update Something here
-        this.x += 1;
-    }
-}
-
 // event for get data chat from TIktok LiveStream
-socket.on('chat', function (data) {
+socket.on('chat', (data) => {
+    console.log(data)
     if (data.comment === KEYWORD.toLowerCase()) {
         count += 1;
-        console.log(data.comment, count);
+        console.log(data, count);
     }
     if (data.comment === KEYWORD2.toLowerCase()) {
         count2 += 1;
-        console.log(data.comment, count2);
+        console.log(data, count2);
     }
 });
 
+socket.on('gift', (data) => {
+    console.log(data);
+})
 
 function setup() {
     let myCanvas = createCanvas(1400, 400);
