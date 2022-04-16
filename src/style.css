@@ -151,7 +151,7 @@ li{
     margin-top: 20px;
     width: 75%;
     padding: 10px 0;
-    height: 200px;
+    height: 300px;
     border-radius: 8px;
     background: #ffffff;
     box-shadow: 1px 1px 4px gray;
@@ -164,4 +164,7 @@ li{
 
 .leaderboard .list-leaderboard{
     padding: 17px 12px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
