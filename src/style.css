@@ -1,24 +1,37 @@
 *,*::before,*::after{
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-body,html{
     margin: 0;
     padding: 0;
+}
+
+li{
+    list-style: none;
 }
 
 .container{
     position: relative;
     max-width: 700px;
     height: 100vh;
-    padding: 2px 12px; 
+    padding: 10px 20px; 
     margin: 0 auto;
 }
 
 .title{
     text-align: center;
     font-size: 1.4rem;
+    margin: 10px 0;
+}
+
+.questions{
+    margin-bottom: 12px;
+}
+
+.questions > .__title{
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.2em;
 }
 
 .cards{
@@ -28,11 +41,16 @@ body,html{
     flex-wrap: wrap;
 }
 
-.card{
-    padding: 20px;
+.cards .card{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
     background: white;
     border-radius: 8px;
-    box-shadow:  10px 10px 29px #bcbcbc;
+    box-shadow:  2px 2px 4px #bcbcbc;
     font-size: 24px;
     font-weight: 600;
 }
@@ -54,9 +72,10 @@ body,html{
 .gift-card{
     display: flex;
     align-items: center;
-    width: 300px;
+    width: 250px;
     position: relative;
     padding: 12px;
+    margin-right: 5px;
     border-radius: 50px;
     overflow: hidden;
 }
@@ -83,6 +102,7 @@ body,html{
     display: flex;
     padding: 4px 0;
     gap: 4px;
+    flex: 1;
     flex-direction: column;
     margin-left: 8px;
     justify-content: center;
@@ -90,8 +110,6 @@ body,html{
 
 .gift-info > .nickname{
     color: rgb(249, 249, 249);
-    width: 100%;
-    flex: 1;
     font-weight: 600;
     letter-spacing: 0.5px;
 }
@@ -104,7 +122,7 @@ body,html{
 
 .gift-info .nickname,
 .gift-info .detail{
-    width: 90%;
+    width: 125px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -125,4 +143,25 @@ body,html{
 
 .gift-icon{
     width: 40px;
+    height: 40px;
+}
+
+.leaderboard{
+    overflow: hidden;
+    margin-top: 20px;
+    width: 75%;
+    padding: 10px 0;
+    height: 200px;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 1px 1px 4px gray;
+}
+
+.leaderboard > .head{
+    padding: 8px;
+    text-align: center;
+}
+
+.leaderboard .list-leaderboard{
+    padding: 17px 12px;
 }
