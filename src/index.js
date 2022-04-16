@@ -1,47 +1,69 @@
+const myContainer = document.querySelector('#myContainer');
+
 const socket = io();
-const KEYWORD = "tangkap"
-const KEYWORD2 = "p";
+const KEYWORD = "ce"
+const KEYWORD2 = "ka";
 
 let car1;
 let car2;
-let count = 0;
-let count2 = 0;
+let gas = {
+    car1: 0,
+    car2: 0,
+}
+let goal = 150;
+
+function setup() {
+    let myCanvas = createCanvas(innerWidth, 400);
+    myCanvas.parent(myContainer);
+    car1 = new Car({
+        x: innerWidth / 15,
+        y: 150,
+        goal,
+    });
+    car2 = new Car({
+        x: innerWidth / 15,
+        y: 250,
+        goal,
+    });
+    goal = new Goal({
+        x: innerWidth - (innerWidth / 15 * 2),
+        y: 150,
+        width: 40,
+        height: 160
+    });
+}
+
+function preload() {
+
+}
+
+// Draw / render Canvas perFrame here
+function draw() {
+    drawingContext.clearRect(0, 0, width, height)
+    background(140);
+    if (gas.car1 > 0) {
+        car1.update();
+    }
+    if (gas.car2 > 0) {
+        car2.update();
+    }
+    goal.show();
+    car1.show();
+    car2.show();
+}
 
 // event for get data chat from TIktok LiveStream
 socket.on('chat', (data) => {
-    console.log(data)
     if (data.comment === KEYWORD.toLowerCase()) {
-        count += 1;
-        console.log(data, count);
+        gas.car1 += 1;
+        console.log(data, KEYWORD);
     }
     if (data.comment === KEYWORD2.toLowerCase()) {
-        count2 += 1;
-        console.log(data, count2);
+        gas.car2 += 1;
+        console.log(data, KEYWORD2);
     }
 });
 
 socket.on('gift', (data) => {
     console.log(data);
 })
-
-function setup() {
-    let myCanvas = createCanvas(1400, 400);
-    myCanvas.parent(myContainer)
-    car1 = new Car(100, 150);
-    car2 = new Car(100, 250);
-}
-
-// Draw / render Canvas perFrame here
-function draw() {
-    background(140);
-    if (count > 0) {
-        car1.update();
-        count--
-    }
-    if (count2 > 0) {
-        car2.update();
-        count2--
-    }
-    car1.show();
-    car2.show();
-}

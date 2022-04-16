@@ -14,6 +14,9 @@ let handleRequest = (req, res) => {
     if (requestURL === "/") {
         requestURL = "/index.html";
     }
+    if (requestURL === "/tebak") {
+        requestURL = "/tebak.html";
+    }
 
     let extention = path.extname(requestURL);
     const mimeType = {
@@ -44,7 +47,7 @@ let server = http.createServer(handleRequest);
 const io = new Server(server);
 
 // Setup Tiktok connector
-let tiktokUsername = "mrups9";
+let tiktokUsername = "shendytini14";
 
 // Create a new wrapper object and pass the username
 let tiktokChatConnection = new WebcastPushConnection(tiktokUsername);

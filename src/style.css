@@ -1,7 +1,128 @@
 *,*::before,*::after{
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body,html{
     margin: 0;
+    padding: 0;
+}
+
+.container{
+    position: relative;
+    max-width: 700px;
+    height: 100vh;
+    padding: 2px 12px; 
+    margin: 0 auto;
+}
+
+.title{
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.cards{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.card{
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow:  10px 10px 29px #bcbcbc;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.gift-container{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    bottom: 50%;
+    z-index: 99999;
+}
+
+.gift-card-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: -42px;
+}
+
+.gift-card{
+    display: flex;
+    align-items: center;
+    width: 300px;
+    position: relative;
+    padding: 12px;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.bg-card{
+    filter: blur(20px);
+    z-index: -999;
+    background-image: linear-gradient(to right, rgb(37, 35, 35) ,rgba(54, 52, 52,0.4));
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.avatar{
+    width: 40px;
+    object-position: center;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.gift-info{
+    display: flex;
+    padding: 4px 0;
+    gap: 4px;
+    flex-direction: column;
+    margin-left: 8px;
+    justify-content: center;
+}
+
+.gift-info > .nickname{
+    color: rgb(249, 249, 249);
+    width: 100%;
+    flex: 1;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.gift-info > .detail{
+    font-size: 0.8rem;
+    margin: 0;
+    color: rgb(195, 191, 191);
+}
+
+.gift-info .nickname,
+.gift-info .detail{
+    width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.gift-counter{
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(245,245,245);
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(170, 165, 165, 0.603);
+}
+
+.counter{
+    margin-left: 4px;
+    font-size: 1.5em;
+}
+
+.gift-icon{
+    width: 40px;
 }
