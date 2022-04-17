@@ -2,9 +2,11 @@ class Car {
     constructor({ x, y, goal }) {
         this.position = { x, y };
         this.velocity = (innerWidth / goal);
+        this.currentPoint = 0;
     }
     show = () => {
         rect(this.position.x, this.position.y, 40, 20);
+        text(this.currentPoint, this.position.x, this.position.y)
     }
 
     update = () => {

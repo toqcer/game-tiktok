@@ -1,11 +1,14 @@
 const socket = io();
-let answer;
 const questionCardContainer = document.querySelector('.questions > .cards');
 const questionContainer = document.querySelector('.questions .__title');
 const giftContainer = document.querySelector('.gift-container');
 const listContainer = document.querySelector('.list-container');
 const leaderboard = new Map();
-const giftQueue = [];
+let answer;
+const btn = document.createElement('button')
+btn.textContent = 'play again';
+btn.addEventListener('click', () => init());
+document.querySelector('.container').append(btn);
 const quest = [
     {
         soal: "Nyarinya susah, setelah dapet dibuang, apaan?",
@@ -18,6 +21,30 @@ const quest = [
     {
         soal: "Kau tau sejak pertama bertemu, terbayang _____ indah di matamu, kau berikan tatapan cinta untukku",
         jawaban: "senyum"
+    },
+    {
+        soal: "Selain uang benda apa yang sering dicari-cari orang?",
+        jawaban: "Benda hilang"
+    },
+    {
+        soal: "Hewan apa yang bersaudara?",
+        jawaban: "Katak Beradik"
+    },
+    {
+        soal: "Apa persamaan antara uang dan rahasia?",
+        jawaban: "Benda hilang"
+    },
+    {
+        soal: "Peleburan antara sel telur dan sel sperma akan membentuk",
+        jawaban: "zigot"
+    },
+    {
+        soal: "Proses peleburan ovum dan sperma disebut?",
+        jawaban: "fertilisasi"
+    },
+    {
+        soal: "Sperma pada manusia diproduksi di",
+        jawaban: "testis"
     },
 
 ]
@@ -81,10 +108,7 @@ const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
 }
 
 const getQuestion = () => {
-    // const response = await fetch(`https://zenzapi.xyz/api/tekateki?apikey=${API_KEY}`)
-    // const json = await response.json();
-    // return json;
-    return quest.pop();
+    return quest[Math.floor(Math.random() * quest.length)]
 }
 
 const filterRandString = (num) => {
@@ -97,11 +121,11 @@ const init = () => {
     const result = getQuestion();
     removeAllChild(listContainer);
     removeAllChild(questionCardContainer);
-    if (result !== {}) {
-        answer = result.jawaban;
-        questionContainer.textContent = result.soal;
-        setCard();
-    }
+    leaderboard.clear();
+    answer = result.jawaban;
+    questionContainer.textContent = result.soal;
+    setCard();
+
 }
 
 const setCard = () => {
@@ -119,13 +143,9 @@ const setCard = () => {
 init();
 
 socket.on('chat', (data) => {
-    if (leaderboard.size < 3 && answer) {
-        if (data.comment.toLowerCase().trim() === 'tangkap') {
-            if (!leaderboard.has(data.userId)) {
-                leaderboard.set(data.userId, { ...data });
-                listContainer.append(createListLeaderboard(data));
-            }
-        }
+    if (leaderboard.size < 3 && answer && data.comment.toLowerCase().trim() === answer.replace(' ', '').toLowerCase() && !leaderboard.has(data.userId)) {
+        leaderboard.set(data.userId, { ...data });
+        listContainer.append(createListLeaderboard(data));
     }
 });
 

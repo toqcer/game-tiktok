@@ -1,8 +1,8 @@
 const myContainer = document.querySelector('#myContainer');
 
 const socket = io();
-const KEYWORD = "ce"
-const KEYWORD2 = "ka";
+const KEYWORD = "tangkap"
+const KEYWORD2 = "ppp";
 
 let car1;
 let car2;
@@ -42,9 +42,13 @@ function draw() {
     drawingContext.clearRect(0, 0, width, height)
     background(140);
     if (gas.car1 > 0) {
+        gas.car1 -= 1;
+        car1.currentPoint += 1;
         car1.update();
     }
     if (gas.car2 > 0) {
+        gas.car2 -= 1;
+        car2.currentPoint += 1;
         car2.update();
     }
     goal.show();
@@ -56,11 +60,9 @@ function draw() {
 socket.on('chat', (data) => {
     if (data.comment === KEYWORD.toLowerCase()) {
         gas.car1 += 1;
-        console.log(data, KEYWORD);
     }
     if (data.comment === KEYWORD2.toLowerCase()) {
         gas.car2 += 1;
-        console.log(data, KEYWORD2);
     }
 });
 

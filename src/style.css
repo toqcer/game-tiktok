@@ -59,13 +59,15 @@ li{
 .gift-container{
     position: absolute;
     right: 10px;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
     top: 50%;
     z-index: 99999;
 }
 
 .gift-card-container{
     display: flex;
-    float: right;
     align-items: center;
     margin-bottom: 4px;
     animation: fadeIn linear 300ms;
