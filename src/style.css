@@ -12,6 +12,7 @@ li{
 .container{
     position: relative;
     max-width: 700px;
+    overflow: hidden;
     height: 100vh;
     padding: 10px 20px; 
     margin: 0 auto;
@@ -59,14 +60,15 @@ li{
     position: absolute;
     right: 10px;
     top: 50%;
-    bottom: 50%;
     z-index: 99999;
 }
 
 .gift-card-container{
     display: flex;
+    float: right;
     align-items: center;
-    margin-bottom: -42px;
+    margin-bottom: 4px;
+    animation: fadeIn linear 300ms;
 }
 
 .gift-card{
@@ -132,6 +134,7 @@ li{
     font-size: 2rem;
     font-weight: bold;
     color: rgb(245,245,245);
+    animation: bam linear infinite;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: rgba(170, 165, 165, 0.603);
 }
@@ -167,4 +170,36 @@ li{
     display: flex;
     gap: 5px;
     align-items: center;
+}
+
+.hidden{
+    opacity: 0;
+    visibility: hidden;
+    animation: fadeOut linear 150ms;
+}
+
+.jump{
+    animation: bam linear 100ms;
+}
+
+@keyframes fadeOut {
+    0%{
+        opacity: 1;
+        visibility: visible;
+    }
+    100%{
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-50px);
+    }
+}
+
+@keyframes fadeIn {
+    0%{
+        opacity: 0;
+        transform: translateX(250px);
+    }
+    100%{
+        opacity: 1;
+    }
 }

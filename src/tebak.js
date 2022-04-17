@@ -22,7 +22,63 @@ const quest = [
 
 ]
 
-// const API_KEY = 'ae4d82f24d33';
+const removeAllChild = (parent) => {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+const createGiftCard = ({ profilePictureUrl, nickname, repeatCount, giftPictureUrl, giftName, giftId, userId }) => {
+    const cardContainer = document.createElement("div");
+    cardContainer.classList.add('gift-card-container');
+    cardContainer.setAttribute('id', userId + String(giftId));
+    const giftCard = document.createElement("div");
+    giftCard.classList.add('gift-card');
+    const backgroundBlur = document.createElement("div");
+    backgroundBlur.classList.add('bg-card');
+    const profileImage = document.createElement('img');
+    profileImage.classList.add('avatar');
+    profileImage.alt = 'avatar';
+    profileImage.src = profilePictureUrl;
+    const giftInfo = document.createElement('div');
+    giftInfo.classList.add("gift-info");
+    const nickName = document.createElement('span');
+    nickName.textContent = nickname;
+    nickName.classList.add('nickname');
+    const detail = document.createElement('p');
+    detail.classList.add('detail');
+    detail.textContent = `mengirim ${giftName}`;
+    giftInfo.append(nickName, detail);
+    const giftIcon = document.createElement('img');
+    giftIcon.src = giftPictureUrl;
+    giftIcon.classList.add('gift-icon');
+    giftCard.append(backgroundBlur, profileImage, giftInfo, giftIcon);
+    const giftCounter = document.createElement('div');
+    giftCounter.classList.add('gift-counter');
+    const counter = document.createElement('span');
+    counter.classList.add('counter');
+    counter.textContent = repeatCount;
+    giftCounter.append('x', counter);
+    cardContainer.append(giftCard, giftCounter);
+
+    return cardContainer;
+}
+
+
+const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
+    const li = document.createElement('li');
+    li.classList.add('list-leaderboard');
+    const leaderCount = document.createElement('span');
+    leaderCount.textContent = leaderboard.size + ".";
+    const profileImage = document.createElement('img');
+    profileImage.classList.add('avatar');
+    profileImage.alt = 'avatar';
+    profileImage.src = profilePictureUrl;
+    const nickName = document.createElement('span');
+    nickName.textContent = nickname;
+    li.append(leaderCount, profileImage, nickName);
+    return li;
+}
 
 const getQuestion = () => {
     // const response = await fetch(`https://zenzapi.xyz/api/tekateki?apikey=${API_KEY}`)
@@ -39,11 +95,11 @@ const filterRandString = (num) => {
 
 const init = () => {
     const result = getQuestion();
-    listContainer.innerHTML = '';
-    questionCardContainer.innerHTML = '';
+    removeAllChild(listContainer);
+    removeAllChild(questionCardContainer);
     if (result !== {}) {
         answer = result.jawaban;
-        questionContainer.innerHTML = result.soal;
+        questionContainer.textContent = result.soal;
         setCard();
     }
 }
@@ -51,11 +107,11 @@ const init = () => {
 const setCard = () => {
     for (let x = 0; x < answer.length; x++) {
         if (answer[x] !== " ") {
-            if (x === 1) {
-                questionCardContainer.innerHTML += `<div class="card">${answer[x]}</div>`
-                continue
-            }
-            questionCardContainer.innerHTML += `<div class="card">${filterRandString(x)}</div>`
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            if (x === 1) cardDiv.textContent = answer[x]
+            else cardDiv.textContent = filterRandString(x)
+            questionCardContainer.append(cardDiv)
         }
     }
 }
@@ -67,34 +123,27 @@ socket.on('chat', (data) => {
         if (data.comment.toLowerCase().trim() === 'tangkap') {
             if (!leaderboard.has(data.userId)) {
                 leaderboard.set(data.userId, { ...data });
-                listContainer.innerHTML += `
-                <li class="list-leaderboard">
-                    <span>${leaderboard.size}.</span>
-                    <img class="avatar" src="${data.profilePictureUrl}"> 
-                    <span>${data.nickname}</span>
-                </li>
-                `
+                listContainer.append(createListLeaderboard(data));
             }
         }
     }
 });
 
 socket.on('gift', (data) => {
-    console.log(data);
-    giftContainer.innerHTML = `
-        <div class="gift-card-container">
-            <div class="gift-card">
-                <div class="bg-card"></div>
-                <img class="avatar" src="${data.profilePictureUrl}" alt="avatar">
-                <div class="gift-info">
-                    <span class="nickname">${data.nickname}</span>
-                    <p class="detail">mengirim ${data.giftName}</p>
-                </div>
-                <img src="${data.giftPictureUrl}" alt="" class="gift-icon">
-            </div>
-            <div class="gift-counter">
-                <p>x<span class="counter">${data.repeatCount}</span></p>
-            </div>
-        </div>
-    `
+    const oldCard = document.getElementById(data.userId + String(data.giftId));
+    if (oldCard) {
+        if (data.repeatEnd) {
+            oldCard.classList.add('hidden');
+            setTimeout(() => {
+                giftContainer.removeChild(oldCard);
+            }, 200)
+        }
+        else {
+            const counter = oldCard.querySelector('.gift-counter .counter');
+            counter.textContent = data.repeatCount;
+        }
+    }
+    else {
+        giftContainer.append(createGiftCard(data));
+    }
 })
