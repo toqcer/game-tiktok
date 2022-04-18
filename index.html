@@ -7,13 +7,26 @@
     <title>Game Tiktod</title>
     <link rel="stylesheet" type="text/css"  href="src/style.css">
     <link rel="icon" href="assets/icons/tiktok.ico" type="image/x-icon">
-    <!-- Script JS -->
-    <script src="node_modules/socket.io/client-dist/socket.io.js" defer></script>
-    <script src="lib/p5/p5.min.js" defer></script>
-    <script src="src/separated.js" defer></script>
-    <script src="src/index.js" defer></script>
 </head>
 <body>
+    <div class="modal-win">
+        <div class="modal-card">
+            <div>
+                <h2 class="modal-title">Result</h2>
+                <h2 class="modal-title">The Winner Is </h2>
+            </div>
+            <img class="img-winner" src="assets/images/mobil_merah.png" alt="mobil">
+            <button class="btn-restart">play again</button>
+        </div>
+    </div>
     <div id="myContainer"></div>
+    <div class="gift-container b-l-position"></div>
+
+    <!-- Script JS -->
+    <script src="lib/p5/p5.min.js"></script>
+    <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script src="src/separated.js"></script>
+    <script src="src/index.js"></script>
+    <script src="src/gift.js"></script>
 </body>
 </html>

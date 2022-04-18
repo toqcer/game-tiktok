@@ -27,6 +27,7 @@ let handleRequest = (req, res) => {
         '.png': 'image/png',
         '.svg': 'image/svg+xml',
         '.ico': 'image/icon',
+        '.json': 'application/json'
     };
     let contentType = mimeType[extention] || 'text/plain';
 
@@ -62,6 +63,7 @@ tiktokChatConnection.connect().then(state => {
 io.on('connection', (socket) => {
     tiktokChatConnection.on('chat', data => {
         socket.emit('chat', data);
+        console.log(io.sockets.getMaxListeners())
     });
     tiktokChatConnection.on('gift', data => {
         socket.emit('gift', data);

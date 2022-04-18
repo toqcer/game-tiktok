@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+body{
+    overflow: hidden;
+}
+
 li{
     list-style: none;
 }
@@ -58,12 +62,21 @@ li{
 
 .gift-container{
     position: absolute;
-    right: 10px;
     display: flex;
-    align-items: flex-end;
     flex-direction: column;
-    top: 50%;
     z-index: 99999;
+}
+
+.r-position{
+    right: 10px;
+    align-items: flex-end;
+    top: 50%;
+}
+
+.b-l-position{
+    bottom: 10%;
+    align-items: flex-start;
+    left: 10px;
 }
 
 .gift-card-container{
@@ -76,9 +89,9 @@ li{
 .gift-card{
     display: flex;
     align-items: center;
-    width: 250px;
+    width: 225px;
     position: relative;
-    padding: 12px;
+    padding: 8px;
     margin-right: 5px;
     border-radius: 50px;
     overflow: hidden;
@@ -96,7 +109,7 @@ li{
 }
 
 .avatar{
-    width: 40px;
+    width: 32px;
     object-position: center;
     object-fit: cover;
     border-radius: 50%;
@@ -136,19 +149,18 @@ li{
     font-size: 2rem;
     font-weight: bold;
     color: rgb(245,245,245);
-    animation: bam linear infinite;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: rgba(170, 165, 165, 0.603);
 }
 
 .counter{
     margin-left: 4px;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 
 .gift-icon{
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
 }
 
 .leaderboard{
@@ -180,9 +192,85 @@ li{
     animation: fadeOut linear 150ms;
 }
 
-.jump{
-    animation: bam linear 100ms;
+.modal-win{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
 }
+
+.modal-card{
+    background-color: rgb(228, 207, 180);
+    width: 100%;
+    position: relative;
+    max-width: 661px;
+    height: 65vh;
+    padding: 16px 24px;
+    background-clip: padding-box ;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 8px;
+    /* border: solid 18px transparent; */
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+}
+
+.modal-card:before{
+    content: "";
+    position: absolute;
+    margin: -18px;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: chocolate;
+    border-radius: inherit;
+    box-shadow: inset 4px 4px 12px rgba(10,10,10,0.7),inset -4px -4px 12px rgba(10, 10, 10, 0.7);
+    -moz-box-shadow: inset 4px 4px 12px rgba(10,10,10,0.7),inset -4px -4px 12px rgba(10, 10, 10, 0.7);
+    -webkit-box-shadow: inset 4px 4px 12px rgba(10,10,10,0.7),inset -4px -4px 12px rgba(10, 10, 10, 0.7);
+    -webkit-border-radius: inherit;
+    -moz-border-radius: inherit;
+    -ms-border-radius: inherit;
+    -o-border-radius: inherit;
+}
+
+.modal-title{
+    text-align: center;
+}
+
+.img-winner{
+    width: 180px;
+    display: block;
+    height: 60px;
+}
+
+.btn-restart{
+    width: 100%;
+    padding: 12px;
+    text-transform: capitalize;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 771px) {
+    .modal-card{
+        max-width: 300px;
+        height: 375px;
+    }
+  }
 
 @keyframes fadeOut {
     0%{

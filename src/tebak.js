@@ -1,96 +1,19 @@
 const socket = io();
 const questionCardContainer = document.querySelector('.questions > .cards');
 const questionContainer = document.querySelector('.questions .__title');
-const giftContainer = document.querySelector('.gift-container');
 const listContainer = document.querySelector('.list-container');
 const leaderboard = new Map();
 let answer;
-const btn = document.createElement('button')
+const btn = document.createElement('button');
 btn.textContent = 'play again';
 btn.addEventListener('click', () => init());
 document.querySelector('.container').append(btn);
-const quest = [
-    {
-        soal: "Nyarinya susah, setelah dapet dibuang, apaan?",
-        jawaban: "Upil"
-    },
-    {
-        soal: "Naik Turun, Jaket, Celana, Tas",
-        jawaban: "Resleting"
-    },
-    {
-        soal: "Kau tau sejak pertama bertemu, terbayang _____ indah di matamu, kau berikan tatapan cinta untukku",
-        jawaban: "senyum"
-    },
-    {
-        soal: "Selain uang benda apa yang sering dicari-cari orang?",
-        jawaban: "Benda hilang"
-    },
-    {
-        soal: "Hewan apa yang bersaudara?",
-        jawaban: "Katak Beradik"
-    },
-    {
-        soal: "Apa persamaan antara uang dan rahasia?",
-        jawaban: "Benda hilang"
-    },
-    {
-        soal: "Peleburan antara sel telur dan sel sperma akan membentuk",
-        jawaban: "zigot"
-    },
-    {
-        soal: "Proses peleburan ovum dan sperma disebut?",
-        jawaban: "fertilisasi"
-    },
-    {
-        soal: "Sperma pada manusia diproduksi di",
-        jawaban: "testis"
-    },
-
-]
 
 const removeAllChild = (parent) => {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
 }
-
-const createGiftCard = ({ profilePictureUrl, nickname, repeatCount, giftPictureUrl, giftName, giftId, userId }) => {
-    const cardContainer = document.createElement("div");
-    cardContainer.classList.add('gift-card-container');
-    cardContainer.setAttribute('id', userId + String(giftId));
-    const giftCard = document.createElement("div");
-    giftCard.classList.add('gift-card');
-    const backgroundBlur = document.createElement("div");
-    backgroundBlur.classList.add('bg-card');
-    const profileImage = document.createElement('img');
-    profileImage.classList.add('avatar');
-    profileImage.alt = 'avatar';
-    profileImage.src = profilePictureUrl;
-    const giftInfo = document.createElement('div');
-    giftInfo.classList.add("gift-info");
-    const nickName = document.createElement('span');
-    nickName.textContent = nickname;
-    nickName.classList.add('nickname');
-    const detail = document.createElement('p');
-    detail.classList.add('detail');
-    detail.textContent = `mengirim ${giftName}`;
-    giftInfo.append(nickName, detail);
-    const giftIcon = document.createElement('img');
-    giftIcon.src = giftPictureUrl;
-    giftIcon.classList.add('gift-icon');
-    giftCard.append(backgroundBlur, profileImage, giftInfo, giftIcon);
-    const giftCounter = document.createElement('div');
-    giftCounter.classList.add('gift-counter');
-    const counter = document.createElement('span');
-    counter.classList.add('counter');
-    counter.textContent = repeatCount;
-    giftCounter.append('x', counter);
-    cardContainer.append(giftCard, giftCounter);
-
-    return cardContainer;
-}
-
 
 const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
     const li = document.createElement('li');
@@ -107,7 +30,9 @@ const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
     return li;
 }
 
-const getQuestion = () => {
+const getQuestion = async () => {
+    const response = await fetch('http://localhost:6996/quest.json');
+    const quest = await response.json();
     return quest[Math.floor(Math.random() * quest.length)]
 }
 
@@ -117,8 +42,8 @@ const filterRandString = (num) => {
     return num / randNum > 1 ? answer[num] : ""
 }
 
-const init = () => {
-    const result = getQuestion();
+const init = async () => {
+    const result = await getQuestion();
     removeAllChild(listContainer);
     removeAllChild(questionCardContainer);
     leaderboard.clear();
@@ -150,18 +75,27 @@ socket.on('chat', (data) => {
 });
 
 socket.on('gift', (data) => {
-    const oldCard = document.getElementById(data.userId + String(data.giftId));
+    const { userId, giftId, repeatCount, repeatEnd } = data;
+    const oldCard = document.getElementById(userId + String(giftId));
     if (oldCard) {
-        if (data.repeatEnd) {
-            oldCard.classList.add('hidden');
-            setTimeout(() => {
-                giftContainer.removeChild(oldCard);
-            }, 200)
+        if (repeatEnd) {
+            // oldCard.classList.add('hidden');
+            giftContainer.removeChild(oldCard);
         }
         else {
             const counter = oldCard.querySelector('.gift-counter .counter');
-            counter.textContent = data.repeatCount;
+            counter.textContent = repeatCount;
         }
+    }
+    else if (repeatEnd) {
+        const newCard = createGiftCard(data);
+        giftContainer.append(newCard);
+        setTimeout(() => {
+            newCard.classList.add('hidden');
+            setTimeout(() => {
+                giftContainer.removeChild(newCard);
+            }, 200)
+        }, 1000)
     }
     else {
         giftContainer.append(createGiftCard(data));

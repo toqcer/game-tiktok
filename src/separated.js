@@ -1,11 +1,15 @@
 class Car {
-    constructor({ x, y, goal }) {
+    constructor({ x, y, goal, variant, carSize, velocity }) {
         this.position = { x, y };
-        this.velocity = (innerWidth / goal);
+        this.carSize = { ...carSize };
+        this.velocity = velocity;
         this.currentPoint = 0;
+        this.variant = variant;
+        console.log(this.velocity)
     }
     show = () => {
-        rect(this.position.x, this.position.y, 40, 20);
+        fill(255);
+        image(this.variant, this.position.x, this.position.y, this.carSize.width, this.carSize.height);
         text(this.currentPoint, this.position.x, this.position.y)
     }
 
@@ -16,13 +20,14 @@ class Car {
 }
 
 class Goal {
-    constructor({ x, y, height, width }) {
+    constructor({ x, y, height, width, finishImg }) {
         this.position = { x, y }
         this.height = height;
         this.width = width;
+        this.finishImg = finishImg;
     }
 
     show = () => {
-        rect(this.position.x, this.position.y, this.width, this.height);
+        image(this.finishImg, this.position.x, this.position.y, this.width, this.height);
     }
 }
