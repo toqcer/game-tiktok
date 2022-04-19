@@ -6,35 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/style.css">
     <link rel="icon" href="assets/icons/tiktok.ico" type="image/x-icon">
-
     <title>Tebak tebakan</title>
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Tebak Kata</h1>
-        <div class="questions">
-            <div class="__title">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, doloremque.</p>
-            </div>
-            <div class="cards">
-
-            </div>
+        
+        <div class="header">
+            <h1 class="title">tebak <span class="title-inner">kata</span></h1>
         </div>
-        <div class="leaderboard">
-            <div class="head">
-                <h3>leaderboard</h3>
+        <section>
+            <div class="questions">
+                <div class="__title">
+                    <p>Naik Turun, Jaket,Celana, Tas</p>
+                </div>
+                <div class="cards">
+                </div>
             </div>
-            <ul class="list-container">
-                <!-- <li class="list-leaderboard">
-                         <span>${leaderboard.size}.</span>
-                         <img class="avatar" src="${data.profilePictureUrl}"> 
-                         <span>${data.nickname}</span>
-                     </li>
-                -->
-            </ul>
-        </div>
+            <div class="leaderboard">
+                <h2 class="head">leaderboard</h2>
+                <ul class="list-container">
+                
+                </ul>
+            </div>
+        </section>
 
-        <div class="gift-container r-position"></div>
+        <div class="gift-container b-l-position"></div>
         <!-- <div class="gift-container">
             <div class="gift-card-container">
                 <div class="gift-card">
@@ -55,7 +51,7 @@
     </div>
     <!-- Script js -->
     <script src="node_modules/socket.io/client-dist/socket.io.js"></script>
-    <script src="src/tebak.js"></script>
     <script src="src/gift.js"></script>
+    <script src="src/tebak.js"></script>
 </body>
 </html>

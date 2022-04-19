@@ -1,13 +1,24 @@
-const socket = io();
 const questionCardContainer = document.querySelector('.questions > .cards');
 const questionContainer = document.querySelector('.questions .__title');
-const listContainer = document.querySelector('.list-container');
+const listContainer = document.querySelector('.leaderboard > .list-container');
 const leaderboard = new Map();
 let answer;
-const btn = document.createElement('button');
-btn.textContent = 'play again';
-btn.addEventListener('click', () => init());
-document.querySelector('.container').append(btn);
+
+const init = async () => {
+    socket.on('chat', handleChat);
+    const result = await getQuestion();
+    removeAllChild(listContainer);
+    questionContainer.innerHTML = '';
+    leaderboard.clear();
+    answer = result.jawaban;
+    questionContainer.textContent = result.soal;
+    setCard();
+
+}
+
+const myCreateElement = (el) => {
+    return document.createElement(el);
+}
 
 const removeAllChild = (parent) => {
     while (parent.firstChild) {
@@ -15,18 +26,54 @@ const removeAllChild = (parent) => {
     }
 }
 
+const handleBtnClick = () => {
+    const modalWrapper = document.querySelector('.modal-wrapper');
+    modalWrapper.remove();
+    init();
+}
+
+const createModalResult = () => {
+    socket.off('chat', handleChat);
+    const modalContainer = myCreateElement('div');
+    modalContainer.classList.add('modal-wrapper');
+    const modalCard = myCreateElement('div');
+    modalCard.classList.add('modal-result');
+    const modalTitle = myCreateElement('h2');
+    modalTitle.classList.add('modal-title');
+    modalTitle.textContent = 'Result';
+    const modalListContainer = myCreateElement('ul');
+    modalListContainer.classList.add('list-container');
+    let count = 0;
+    for (const [_, data] of leaderboard.entries()) {
+        count += 1;
+        const li = createListLeaderboard(data);
+        const posLeaderboard = myCreateElement('div');
+        posLeaderboard.classList.add('leaderboard-position');
+        posLeaderboard.textContent = count;
+        li.append(posLeaderboard);
+        modalListContainer.append(li);
+    }
+    const btn = myCreateElement('button');
+    btn.classList.add('btn-restart', 'btn-orange');
+    btn.textContent = 'play again';
+    btn.addEventListener('click', handleBtnClick);
+    modalCard.append(modalTitle, modalListContainer, btn);
+    modalContainer.append(modalCard);
+
+    return modalContainer;
+}
+
 const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
     const li = document.createElement('li');
     li.classList.add('list-leaderboard');
-    const leaderCount = document.createElement('span');
-    leaderCount.textContent = leaderboard.size + ".";
     const profileImage = document.createElement('img');
-    profileImage.classList.add('avatar');
+    profileImage.classList.add('leaderboard-avatar');
     profileImage.alt = 'avatar';
     profileImage.src = profilePictureUrl;
     const nickName = document.createElement('span');
+    nickName.classList.add('leaderboard-nickname')
     nickName.textContent = nickname;
-    li.append(leaderCount, profileImage, nickName);
+    li.append(profileImage, nickName);
     return li;
 }
 
@@ -37,20 +84,9 @@ const getQuestion = async () => {
 }
 
 const filterRandString = (num) => {
-    const max = answer.length >= 15 ? Math.floor(answer.length * 1.8) : 15;
+    const max = answer.length >= 12 ? Math.floor(answer.length * 1.8) : 15;
     const randNum = Math.floor(Math.random() * max);
     return num / randNum > 1 ? answer[num] : ""
-}
-
-const init = async () => {
-    const result = await getQuestion();
-    removeAllChild(listContainer);
-    removeAllChild(questionCardContainer);
-    leaderboard.clear();
-    answer = result.jawaban;
-    questionContainer.textContent = result.soal;
-    setCard();
-
 }
 
 const setCard = () => {
@@ -58,46 +94,25 @@ const setCard = () => {
         if (answer[x] !== " ") {
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('card');
-            if (x === 1) cardDiv.textContent = answer[x]
-            else cardDiv.textContent = filterRandString(x)
+            text = filterRandString(x);
+            if (text) cardDiv.classList.add('active');
+            cardDiv.textContent = text;
             questionCardContainer.append(cardDiv)
+        }
+    }
+}
+
+const handleChat = (data) => {
+    if (leaderboard.size < 3 && answer && data.comment.toLowerCase().replace(' ', '') === answer.toLowerCase().replace(' ', '') && !leaderboard.has(data.userId)) {
+        leaderboard.set(data.userId, { ...data });
+        listContainer.append(createListLeaderboard(data));
+        if (leaderboard.size === 3) {
+            document.querySelector(".container").append(createModalResult());
         }
     }
 }
 
 init();
 
-socket.on('chat', (data) => {
-    if (leaderboard.size < 3 && answer && data.comment.toLowerCase().trim() === answer.replace(' ', '').toLowerCase() && !leaderboard.has(data.userId)) {
-        leaderboard.set(data.userId, { ...data });
-        listContainer.append(createListLeaderboard(data));
-    }
-});
 
-socket.on('gift', (data) => {
-    const { userId, giftId, repeatCount, repeatEnd } = data;
-    const oldCard = document.getElementById(userId + String(giftId));
-    if (oldCard) {
-        if (repeatEnd) {
-            // oldCard.classList.add('hidden');
-            giftContainer.removeChild(oldCard);
-        }
-        else {
-            const counter = oldCard.querySelector('.gift-counter .counter');
-            counter.textContent = repeatCount;
-        }
-    }
-    else if (repeatEnd) {
-        const newCard = createGiftCard(data);
-        giftContainer.append(newCard);
-        setTimeout(() => {
-            newCard.classList.add('hidden');
-            setTimeout(() => {
-                giftContainer.removeChild(newCard);
-            }, 200)
-        }, 1000)
-    }
-    else {
-        giftContainer.append(createGiftCard(data));
-    }
-})
+

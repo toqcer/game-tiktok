@@ -1,3 +1,4 @@
+const socket = io();
 const giftContainer = document.querySelector('.gift-container');
 
 const createGiftCard = ({ profilePictureUrl, nickname, repeatCount, giftPictureUrl, giftName, giftId, userId }) => {
@@ -54,11 +55,9 @@ socket.on('gift', (data) => {
         const newCard = createGiftCard(data);
         giftContainer.append(newCard);
         setTimeout(() => {
-            newCard.classList.add('hidden');
-            setTimeout(() => {
-                giftContainer.removeChild(newCard);
-            }, 200)
-        }, 1000)
+            // newCard.classList.add('hidden');
+            giftContainer.removeChild(newCard);
+        }, 500)
     }
     else {
         giftContainer.append(createGiftCard(data));

@@ -48,7 +48,7 @@ let server = http.createServer(handleRequest);
 const io = new Server(server);
 
 // Setup Tiktok connector
-let tiktokUsername = "shendytini14";
+let tiktokUsername = "ttm_official1";
 
 // Create a new wrapper object and pass the username
 let tiktokChatConnection = new WebcastPushConnection(tiktokUsername);
@@ -60,10 +60,10 @@ tiktokChatConnection.connect().then(state => {
     console.error('Failed to connect', err);
 });
 
+io.sockets.setMaxListeners(30);
 io.on('connection', (socket) => {
     tiktokChatConnection.on('chat', data => {
         socket.emit('chat', data);
-        console.log(io.sockets.getMaxListeners())
     });
     tiktokChatConnection.on('gift', data => {
         socket.emit('gift', data);
