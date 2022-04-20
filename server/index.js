@@ -60,7 +60,7 @@ tiktokChatConnection.connect().then(state => {
     console.error('Failed to connect', err);
 });
 
-io.sockets.setMaxListeners(30);
+io.sockets.setMaxListeners(99);
 io.on('connection', (socket) => {
     tiktokChatConnection.on('chat', data => {
         socket.emit('chat', data);
