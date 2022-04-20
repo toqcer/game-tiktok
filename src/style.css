@@ -289,10 +289,9 @@ section{
 .hidden{
     opacity: 0;
     visibility: hidden;
-    animation: fadeOut linear 150ms;
+    animation: fadeOut linear 50ms;
+    -webkit-animation: fadeOut linear 50ms;
 }
-
-
 
 .modal-wrapper{
     position: absolute;

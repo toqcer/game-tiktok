@@ -48,7 +48,7 @@ let server = http.createServer(handleRequest);
 const io = new Server(server);
 
 // Setup Tiktok connector
-let tiktokUsername = "ttm_official1";
+let tiktokUsername = "noranmanalu";
 
 // Create a new wrapper object and pass the username
 let tiktokChatConnection = new WebcastPushConnection(tiktokUsername);

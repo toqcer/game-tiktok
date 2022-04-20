@@ -1,7 +1,11 @@
 const myContainer = document.querySelector('#myContainer');
+const modalWrapper = document.querySelector('.modal-wrapper');
+const modalTitle = document.querySelectorAll('.modal-title');
+const imgWrapper = document.querySelector('.img-wrapper');
+const btnRestart = document.querySelector('.btn-restart');
 
-const KEYWORD = "h"
-const KEYWORD2 = "a";
+const KEYWORD = "pp"
+const KEYWORD2 = "tangkap";
 
 let streetImg,
     bgCity,
@@ -14,6 +18,8 @@ let streetImg,
     velocity,
     carSize;
 
+let myFrameRates = 10;
+
 let gas = {
     car1: 0,
     car2: 0,
@@ -23,62 +29,48 @@ let goal;
 
 let winner = '';
 
+const removeAllChild = (parent) => {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
 const myCreateElement = (el) => {
     return document.createElement(el);
 }
 
 const handleComment = (data) => {
     if (data.comment === (KEYWORD.toLowerCase())) {
-        gas.car1 += 10;
+        gas.car1 += (1 * myFrameRates);
     }
     if (data.comment === (KEYWORD2.toLowerCase())) {
-        gas.car2 += 10;
+        gas.car2 += (1 * myFrameRates);
     }
 }
 
 const handleBtnClick = () => {
-    const modalWrapper = document.querySelector('.modal-wrapper');
-    winner = ''
-    modalWrapper.remove();
+    modalWrapper.classList.toggle('hidden');
     init();
 }
 
-const createModal = (winner) => {
+const showModal = () => {
     socket.off('chat', handleComment);
-    const modalContainer = myCreateElement('div');
-    modalContainer.classList.add('modal-wrapper');
-    const modalCard = myCreateElement('div');
-    modalCard.classList.add('modal-card');
-    const titleWrapper = myCreateElement('div');
-    titleWrapper.classList.add('title-wrapper');
+    modalWrapper.classList.toggle('hidden');
     const text = winner === 'draw' ? 'draw' : 'the winner is';
-    const modalText = ['Result', text];
-    modalText.forEach(item => {
-        const modalTitle = myCreateElement('h2');
-        modalTitle.classList.add('modal-title');
-        modalTitle.textContent = item;
-        titleWrapper.appendChild(modalTitle);
-    });
-    const btn = myCreateElement('button');
-    btn.classList.add('btn-restart', 'wood');
-    btn.textContent = 'play again';
-    btn.addEventListener('click', handleBtnClick);
+    modalTitle[1].textContent = text;
     if (winner !== 'draw') {
         const imgWinner = myCreateElement('img');
         imgWinner.classList.add('img-winner');
         imgWinner.src = winner === "car1" && 'assets/images/mobil_merah.png' || winner === "car2" && 'assets/images/mobil_biru.png';
         imgWinner.alt = 'PictWinner';
-        modalCard.append(titleWrapper, imgWinner, btn);
-    } else {
-        modalCard.append(titleWrapper, btn);
+        imgWrapper.appendChild(imgWinner);
     }
-    modalContainer.append(modalCard);
-
-    return modalContainer;
 }
 
 const init = () => {
     socket.on('chat', handleComment);
+    winner = ''
+    removeAllChild(imgWrapper);
     car1.position.x = initialPositionCar;
     car2.position.x = initialPositionCar;
     car1.currentPoint = 0
@@ -102,7 +94,7 @@ function setup() {
     carSize = { width: 135, height: 45 };
     goalSize = { width: 40, height: 165 };
     finish = innerWidth - initialPositionCar * 2;
-    velocity = (finish - initialPositionCar - carSize.width + goalSize.width) / (target * 10);
+    velocity = (finish - initialPositionCar - carSize.width + goalSize.width) / (target * myFrameRates);
 
     car1 = new Car({
         x: initialPositionCar,
@@ -153,15 +145,17 @@ function draw() {
         goal.show();
         car1.show();
         car2.show();
-        if (car1.currentPoint >= goal && car2.currentPoint >= target) {
+        if (car1.currentPoint >= target && car2.currentPoint >= target) {
             winner = 'draw';
-            document.body.append(createModal(winner));
+            showModal();
         } else if (car1.currentPoint >= target) {
             winner = 'car1';
-            document.body.append(createModal(winner));
+            showModal();
         } else if (car2.currentPoint >= target) {
             winner = 'car2';
-            document.body.append(createModal(winner));
+            showModal();
         }
     }
 }
+
+btnRestart.addEventListener('click', handleBtnClick);

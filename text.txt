@@ -1,0 +1,18 @@
+       Structure HTML gift Card
+       
+        <div class="gift-container">
+            <div class="gift-card-container">
+                <div class="gift-card">
+                    <div class="bg-card"></div>
+                    <img class="avatar" src="assets/dummy/dummy-avatar.jpg" alt="avatar">
+                    <div class="gift-info">
+                        <span class="nickname">ijorcuyy</span>
+                        <p class="detail">mengirim Mawar</p>
+                    </div>
+                    <img src="assets/icons/tiktok.ico" alt="" class="gift-icon">
+                </div>
+                <div class="gift-counter">
+                    x<span class="counter">44</span>
+                </div>
+            </div>
+        </div>

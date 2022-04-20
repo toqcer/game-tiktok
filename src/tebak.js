@@ -1,6 +1,10 @@
 const questionCardContainer = document.querySelector('.questions > .cards');
 const questionContainer = document.querySelector('.questions .__title');
 const listContainer = document.querySelector('.leaderboard > .list-container');
+const modalListContainer = document.querySelector('.modal-result > .list-container');
+const btnRestart = document.querySelector('.btn-restart');
+const modalWrapper = document.querySelector('.modal-wrapper');
+
 const leaderboard = new Map();
 let answer;
 
@@ -8,7 +12,9 @@ const init = async () => {
     socket.on('chat', handleChat);
     const result = await getQuestion();
     removeAllChild(listContainer);
-    questionContainer.innerHTML = '';
+    removeAllChild(modalListContainer);
+    removeAllChild(questionContainer);
+    removeAllChild(questionCardContainer);
     leaderboard.clear();
     answer = result.jawaban;
     questionContainer.textContent = result.soal;
@@ -27,22 +33,13 @@ const removeAllChild = (parent) => {
 }
 
 const handleBtnClick = () => {
-    const modalWrapper = document.querySelector('.modal-wrapper');
-    modalWrapper.remove();
+    modalWrapper.classList.toggle('hidden');
     init();
 }
 
-const createModalResult = () => {
+const showModalResult = () => {
     socket.off('chat', handleChat);
-    const modalContainer = myCreateElement('div');
-    modalContainer.classList.add('modal-wrapper');
-    const modalCard = myCreateElement('div');
-    modalCard.classList.add('modal-result');
-    const modalTitle = myCreateElement('h2');
-    modalTitle.classList.add('modal-title');
-    modalTitle.textContent = 'Result';
-    const modalListContainer = myCreateElement('ul');
-    modalListContainer.classList.add('list-container');
+    modalWrapper.classList.toggle('hidden');
     let count = 0;
     for (const [_, data] of leaderboard.entries()) {
         count += 1;
@@ -53,24 +50,16 @@ const createModalResult = () => {
         li.append(posLeaderboard);
         modalListContainer.append(li);
     }
-    const btn = myCreateElement('button');
-    btn.classList.add('btn-restart', 'btn-orange');
-    btn.textContent = 'play again';
-    btn.addEventListener('click', handleBtnClick);
-    modalCard.append(modalTitle, modalListContainer, btn);
-    modalContainer.append(modalCard);
-
-    return modalContainer;
 }
 
 const createListLeaderboard = ({ profilePictureUrl, nickname }) => {
-    const li = document.createElement('li');
+    const li = myCreateElement('li');
     li.classList.add('list-leaderboard');
-    const profileImage = document.createElement('img');
+    const profileImage = myCreateElement('img');
     profileImage.classList.add('leaderboard-avatar');
     profileImage.alt = 'avatar';
     profileImage.src = profilePictureUrl;
-    const nickName = document.createElement('span');
+    const nickName = myCreateElement('span');
     nickName.classList.add('leaderboard-nickname')
     nickName.textContent = nickname;
     li.append(profileImage, nickName);
@@ -92,7 +81,7 @@ const filterRandString = (num) => {
 const setCard = () => {
     for (let x = 0; x < answer.length; x++) {
         if (answer[x] !== " ") {
-            const cardDiv = document.createElement('div');
+            const cardDiv = myCreateElement('div');
             cardDiv.classList.add('card');
             text = filterRandString(x);
             if (text) cardDiv.classList.add('active');
@@ -107,11 +96,12 @@ const handleChat = (data) => {
         leaderboard.set(data.userId, { ...data });
         listContainer.append(createListLeaderboard(data));
         if (leaderboard.size === 3) {
-            document.querySelector(".container").append(createModalResult());
+            showModalResult();
         }
     }
 }
 
+btnRestart.addEventListener('click', handleBtnClick);
 init();
 
 
