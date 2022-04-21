@@ -7,6 +7,17 @@ const btnRestart = document.querySelector('.btn-restart');
 const KEYWORD = "pp"
 const KEYWORD2 = "tangkap";
 
+let src = 'assets/sounds/tes.mp3';
+const sound = new Howl({
+    src,
+    volume: 0.2,
+    loop: true,
+})
+
+sound.play();
+
+const winAudio = new Audio('assets/sounds/tes3.mp3');
+
 let streetImg,
     bgCity,
     car1,
@@ -35,10 +46,6 @@ const removeAllChild = (parent) => {
     }
 }
 
-const myCreateElement = (el) => {
-    return document.createElement(el);
-}
-
 const handleComment = (data) => {
     if (data.comment === (KEYWORD.toLowerCase())) {
         gas.car1 += (1 * myFrameRates);
@@ -54,6 +61,7 @@ const handleBtnClick = () => {
 }
 
 const showModal = () => {
+    winAudio.play();
     socket.off('chat', handleComment);
     modalWrapper.classList.toggle('hidden');
     const text = winner === 'draw' ? 'draw' : 'the winner is';

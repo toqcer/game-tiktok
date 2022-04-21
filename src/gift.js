@@ -1,34 +1,38 @@
 const socket = io();
 const giftContainer = document.querySelector('.gift-container');
 
+const myCreateElement = (el) => {
+    return document.createElement(el);
+}
+
 const createGiftCard = ({ profilePictureUrl, nickname, repeatCount, giftPictureUrl, giftName, giftId, userId }) => {
-    const cardContainer = document.createElement("div");
+    const cardContainer = myCreateElement("div");
     cardContainer.classList.add('gift-card-container');
     cardContainer.setAttribute('id', userId + String(giftId));
-    const giftCard = document.createElement("div");
+    const giftCard = myCreateElement("div");
     giftCard.classList.add('gift-card');
-    const backgroundBlur = document.createElement("div");
+    const backgroundBlur = myCreateElement("div");
     backgroundBlur.classList.add('bg-card');
-    const profileImage = document.createElement('img');
+    const profileImage = myCreateElement('img');
     profileImage.classList.add('avatar');
     profileImage.alt = 'avatar';
     profileImage.src = profilePictureUrl;
-    const giftInfo = document.createElement('div');
+    const giftInfo = myCreateElement('div');
     giftInfo.classList.add("gift-info");
-    const nickName = document.createElement('span');
+    const nickName = myCreateElement('span');
     nickName.textContent = nickname;
     nickName.classList.add('nickname');
-    const detail = document.createElement('p');
+    const detail = myCreateElement('p');
     detail.classList.add('detail');
     detail.textContent = `mengirim ${giftName}`;
     giftInfo.append(nickName, detail);
-    const giftIcon = document.createElement('img');
+    const giftIcon = myCreateElement('img');
     giftIcon.src = giftPictureUrl;
     giftIcon.classList.add('gift-icon');
     giftCard.append(backgroundBlur, profileImage, giftInfo, giftIcon);
-    const giftCounter = document.createElement('div');
+    const giftCounter = myCreateElement('div');
     giftCounter.classList.add('gift-counter');
-    const counter = document.createElement('span');
+    const counter = myCreateElement('span');
     counter.classList.add('counter');
     counter.textContent = repeatCount;
     giftCounter.append('x', counter);
@@ -37,15 +41,11 @@ const createGiftCard = ({ profilePictureUrl, nickname, repeatCount, giftPictureU
     return cardContainer;
 }
 
-
 socket.on('gift', (data) => {
     const { userId, giftId, repeatCount, repeatEnd } = data;
     const oldCard = document.getElementById(userId + String(giftId));
     if (oldCard) {
-        if (repeatEnd) {
-            // oldCard.classList.add('hidden');
-            giftContainer.removeChild(oldCard);
-        }
+        if (repeatEnd) giftContainer.removeChild(oldCard);
         else {
             const counter = oldCard.querySelector('.gift-counter .counter');
             counter.textContent = repeatCount;
@@ -54,12 +54,7 @@ socket.on('gift', (data) => {
     else if (repeatEnd) {
         const newCard = createGiftCard(data);
         giftContainer.append(newCard);
-        setTimeout(() => {
-            // newCard.classList.add('hidden');
-            giftContainer.removeChild(newCard);
-        }, 500)
+        setTimeout(() => giftContainer.removeChild(newCard), 500)
     }
-    else {
-        giftContainer.append(createGiftCard(data));
-    }
+    else giftContainer.append(createGiftCard(data));
 })

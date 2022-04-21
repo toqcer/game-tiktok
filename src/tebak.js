@@ -5,6 +5,14 @@ const modalListContainer = document.querySelector('.modal-result > .list-contain
 const btnRestart = document.querySelector('.btn-restart');
 const modalWrapper = document.querySelector('.modal-wrapper');
 
+let src = 'assets/sounds/tes1.mp3';
+const sound = new Howl({
+    src,
+    volume: 0.2,
+    loop: true,
+})
+
+const answerAudio = new Audio('assets/sounds/tes2.mp3');
 const leaderboard = new Map();
 let answer;
 
@@ -19,11 +27,6 @@ const init = async () => {
     answer = result.jawaban;
     questionContainer.textContent = result.soal;
     setCard();
-
-}
-
-const myCreateElement = (el) => {
-    return document.createElement(el);
 }
 
 const removeAllChild = (parent) => {
@@ -38,6 +41,8 @@ const handleBtnClick = () => {
 }
 
 const showModalResult = () => {
+    bgAudio.pause();
+    bgAudio.currentTime = 0;
     socket.off('chat', handleChat);
     modalWrapper.classList.toggle('hidden');
     let count = 0;
@@ -94,6 +99,7 @@ const setCard = () => {
 const handleChat = (data) => {
     if (leaderboard.size < 3 && answer && data.comment.toLowerCase().replace(' ', '') === answer.toLowerCase().replace(' ', '') && !leaderboard.has(data.userId)) {
         leaderboard.set(data.userId, { ...data });
+        answerAudio.play();
         listContainer.append(createListLeaderboard(data));
         if (leaderboard.size === 3) {
             showModalResult();
@@ -102,6 +108,7 @@ const handleChat = (data) => {
 }
 
 btnRestart.addEventListener('click', handleBtnClick);
+sound.play();
 init();
 
 

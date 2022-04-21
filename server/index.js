@@ -19,6 +19,7 @@ let handleRequest = (req, res) => {
     }
 
     let extention = path.extname(requestURL);
+
     const mimeType = {
         '.html': 'text/html',
         '.css': 'text/css',
@@ -27,7 +28,8 @@ let handleRequest = (req, res) => {
         '.png': 'image/png',
         '.svg': 'image/svg+xml',
         '.ico': 'image/icon',
-        '.json': 'application/json'
+        '.json': 'application/json',
+        '.mp3': 'audio/mp3',
     };
     let contentType = mimeType[extention] || 'text/plain';
 
